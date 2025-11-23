@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from routers.calculator import router as calc_router
 from routers import formulas
+from routers.games import router as games_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -14,3 +15,4 @@ app = FastAPI()
 app.include_router(auth_router, prefix="/auth", tags=["Авторизація"])
 app.include_router(calc_router, prefix="/calculator", tags=["Калькулятор"])
 app.include_router(formulas.router, prefix="/formulas", tags=["Формули фігур на площині і в об'ємі"])
+app.include_router(games_router, prefix="/games", tags=["Міні-ігри"])
