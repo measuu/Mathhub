@@ -3,6 +3,58 @@ import math
 
 router = APIRouter()
 
+
+formulas_info = {
+    "трикутник": {
+        "площа": "S = (a * h) / 2, де a – основа, h – висота",
+        "периметр": "P = a + b + c, де a, b, c – сторони трикутника"
+    },
+    "прямокутний_трикутник": {
+        "площа": "S = (a * b) / 2, де a і b – катети",
+        "периметр": "P = a + b + √(a^2 + b^2), де a і b – катети, гіпотенуза c = √(a^2 + b^2)"
+    },
+    "паралелограм": {
+        "площа": "S = a * h, де a – основа, h – висота",
+        "периметр": "P = 2 * (a + b), де a і b – сторони паралелограма"
+    },
+    "ромб": {
+        "площа": "S = (d1 * d2) / 2, де d1 і d2 – діагоналі",
+        "периметр": "P = 4 * a, де a – сторона ромба"
+    },
+    "трапеція": {
+        "площа": "S = ((a + b) / 2) * h, де a і b – основи, h – висота",
+        "периметр": "P = a + b + c + d, де a, b – основи, c, d – бічні сторони"
+    },
+    "піраміда": {
+        "площа_бокова": "S_b = (P_base * l) / 2, де P_base – периметр основи, l – апофема",
+        "площа_повна": "S = S_base + S_b",
+        "об'єм": "V = (1/3) * S_base * h"
+    },
+    "призма": {
+        "площа_бокова": "S_b = P_base * h, де P_base – периметр основи, h – висота",
+        "площа_повна": "S = 2 * S_base + S_b",
+        "об'єм": "V = S_base * h"
+    },
+    "циліндр": {
+        "площа_бокова": "S_b = 2 * π * r * h",
+        "площа_повна": "S = 2 * π * r * (r + h)",
+        "об'єм": "V = π * r^2 * h"
+    },
+    "конус": {
+        "площа_бокова": "S_b = π * r * l, де l – твірна конуса",
+        "площа_повна": "S = π * r * (r + l)",
+        "об'єм": "V = (1/3) * π * r^2 * h"
+    }
+}
+
+@router.get("/formulas_info/{figure_name}")
+def get_formulas_info(figure_name: str):
+    info = formulas_info.get(figure_name.lower())
+    if not info:
+        return {"помилка": f"Фігура '{figure_name}' не знайдена. Спробуйте іншу."}
+    return info
+
+
 # --- Площинні фігури ---
 @router.get("/rectangle")
 def rectangle(length: float, width: float):
@@ -32,7 +84,6 @@ def circle(radius: float):
 
 @router.get("/triangle")
 def triangle(a: float, b: float, c: float):
-    # формула Герона для площі
     s = (a + b + c) / 2
     area = math.sqrt(s * (s - a) * (s - b) * (s - c))
     perimeter = a + b + c
@@ -47,7 +98,6 @@ def triangle(a: float, b: float, c: float):
 
 @router.get("/right_triangle")
 def right_triangle(a: float, b: float):
-    # a і b — катети
     area = (a * b) / 2
     hypotenuse = math.sqrt(a**2 + b**2)
     perimeter = a + b + hypotenuse
@@ -88,7 +138,6 @@ def rhombus(diagonal1: float, diagonal2: float, side: float):
 
 @router.get("/trapezoid")
 def trapezoid(a: float, b: float, height: float, c: float, d: float):
-    # a і b — основи, c і d — бокові сторони
     area = ((a + b) / 2) * height
     perimeter = a + b + c + d
     return {
