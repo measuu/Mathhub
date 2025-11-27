@@ -8,6 +8,7 @@ from routers.calculator import router as calc_router
 from routers import formulas
 from routers.games import router as games_router
 from routers.conversion import router as conv_router
+from routers.math_facts import router as facts_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -15,6 +16,7 @@ app = FastAPI()
 
 app.include_router(auth_router, prefix="/auth", tags=["Авторизація"])
 app.include_router(calc_router, prefix="/calculator", tags=["Калькулятор"])
-app.include_router(formulas.router, prefix="/formulas", tags=["Формули фігур на площині і в об'ємі"])
-app.include_router(games_router, prefix="/games", tags=["Міні-ігри"])
 app.include_router(conv_router, prefix="/conversation", tags=["Перетворення одиниць"])
+app.include_router(formulas.router, prefix="/formulas", tags=["Формули фігур на площині і в об'ємі"])
+app.include_router(facts_router, prefix="/facts", tags=["Рандомні математичні факти"])
+app.include_router(games_router, prefix="/games", tags=["Міні-ігри"])
