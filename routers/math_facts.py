@@ -1,10 +1,7 @@
 from fastapi import APIRouter, HTTPException
 import random
 
-router = APIRouter(
-    prefix="/facts",
-    tags=["Math Facts"]
-)
+router = APIRouter()
 
 math_facts = [
     # ----- GEOMETRY -----
