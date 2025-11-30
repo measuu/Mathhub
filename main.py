@@ -10,6 +10,7 @@ from routers.games import router as games_router
 from routers.conversion import router as conv_router
 from routers.math_facts import router as facts_router
 from routers.memes import router as mem_router
+from routers.feedback import router as feedback_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -22,3 +23,4 @@ app.include_router(formulas.router, prefix="/formulas", tags=["Формули ф
 app.include_router(facts_router, prefix="/facts", tags=["Рандомні математичні факти"])
 app.include_router(mem_router, prefix="/memes", tags=["Математичні меми"])
 app.include_router(games_router, prefix="/games", tags=["Міні-ігри"])
+app.include_router(feedback_router, prefix="/feedback", tags=["Відгуки"])
