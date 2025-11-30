@@ -75,7 +75,6 @@ class GameRequest(BaseModel):
     answer: int | None = Field(None, description="Ваша відповідь на поточне питання")
 
 
-# Словник для збереження стану гри (клієнт/сервер не зберігає player_id)
 game_state = {
     "questions": [],
     "answers": [],
@@ -90,7 +89,6 @@ game_state = {
 def game(req: GameRequest):
     global game_state
 
-    # Якщо гра ще не стартувала
     if not game_state["started"]:
         game_state["difficulty"] = req.difficulty
         max_val = {1: 100, 2: 1000, 3: 1_000_000}.get(req.difficulty, 100)
@@ -109,7 +107,6 @@ def game(req: GameRequest):
             "question": question_text
         }
 
-    # Якщо гра вже стартувала, перевіряємо відповідь
     if req.answer is None:
         return {"message": "Введіть відповідь у полі answer!"}
 
@@ -127,7 +124,6 @@ def game(req: GameRequest):
     game_state["answers"].append(req.answer)
     game_state["current"] += 1
 
-    # Перевірка, чи закінчились питання
     if game_state["current"] >= 10:
         percent = (game_state["correct"] / 10) * 100
         final_message = ""
@@ -136,7 +132,6 @@ def game(req: GameRequest):
         else:
             final_message = f"На жаль, результат невдалий: {game_state['correct']} правильних відповідей з 10 ({percent}%). Наступного разу спробуйте краще."
 
-        # Скидаємо стан гри
         game_state["started"] = False
         return {
             "message": final_message,
@@ -145,7 +140,6 @@ def game(req: GameRequest):
             "percent": percent
         }
 
-    # Наступне питання
     a, b, op = game_state["questions"][game_state["current"]]
     question_text = f"{a} {op} {b}"
     return {
@@ -236,7 +230,7 @@ def prime_game(req: PrimeGameRequest):
 
 
 
-#-------------------------------------Третя гра--------------------------------------------
+#-------------------------------------Четверта гра--------------------------------------------
 
 
 class MemoryRequest(BaseModel):
@@ -294,3 +288,63 @@ def memory_game(req: MemoryRequest):
     return {
         "message": result_message
     }
+
+
+#-------------------------------------П'ята гра--------------------------------------------
+
+
+WORDS = [
+    "синус",
+    "косинус",
+    "тангенс",
+    "катет",
+    "гіпотенуза",
+    "радіус",
+    "діаметр",
+    "площа",
+    "обʼєм",
+    "периметр",
+    "коло",
+    "точка",
+    "вектор",
+    "матриця"
+]
+
+
+def shuffle_word(word: str) -> str:
+    letters = list(word)
+    random.shuffle(letters)
+    return "".join(letters)
+
+
+class CheckRequest(BaseModel):
+    index: int
+    answer: str
+
+
+class CheckResponse(BaseModel):
+    correct_word: str
+    is_correct: bool
+
+
+@router.get("/")
+def get_anagram():
+    index = random.randint(0, len(WORDS) - 1)
+    original = WORDS[index]
+    anagram = shuffle_word(original)
+
+    return {
+        "index": index,
+        "anagram": anagram
+    }
+
+@router.post("/")
+def check_anagram(data: CheckRequest):
+    correct = WORDS[data.index]
+
+    is_correct = (data.answer.strip().lower() == correct.lower())
+
+    return CheckResponse(
+        correct_word=correct,
+        is_correct=is_correct
+    )
