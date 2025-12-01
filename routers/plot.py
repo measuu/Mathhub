@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException, Query
-from fastapi.responses import StreamingResponse
-import matplotlib.pyplot as plt
-import sympy as sp
-import numpy as np
 import io
 import math
+
+import matplotlib.pyplot as plt
+import numpy as np
+import sympy as sp
+from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import StreamingResponse
 
 router = APIRouter()
 
@@ -40,11 +41,13 @@ def plot_function(function: str):
 
 @router.get("/plot3d", summary="Налаштовуваний 3D-графік")
 def plot_3d(
-        formula: str = Query("np.sin(np.sqrt(x**2 + y**2))", description="Функція від x та y"),
-        min_val: float = Query(-4),
-        max_val: float = Query(4),
-        step: float = Query(0.1),
-        cmap: str = Query("viridis"),
+    formula: str = Query(
+        "np.sin(np.sqrt(x**2 + y**2))", description="Функція від x та y"
+    ),
+    min_val: float = Query(-4),
+    max_val: float = Query(4),
+    step: float = Query(0.1),
+    cmap: str = Query("viridis"),
 ):
     try:
         x = np.arange(min_val, max_val, step)
@@ -65,8 +68,8 @@ def plot_3d(
         raise HTTPException(status_code=400, detail="Помилка у формулі функції")
 
     fig = plt.figure(figsize=(6, 5))
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot_surface(X, Y, Z, cmap=cmap, edgecolor='none')
+    ax = fig.add_subplot(111, projection="3d")
+    ax.plot_surface(X, Y, Z, cmap=cmap, edgecolor="none")
     ax.set_title(f"3D surface: z = {formula}")
 
     buf = io.BytesIO()

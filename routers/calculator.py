@@ -1,8 +1,10 @@
-from fastapi import APIRouter
-from math import factorial, isqrt, cbrt, pi, e, pow
 import math
+from math import cbrt, e, factorial, isqrt, pi, pow
+
+from fastapi import APIRouter
 
 router = APIRouter()
+
 
 @router.get("/add")
 def add(a: float, b: float):
@@ -10,7 +12,7 @@ def add(a: float, b: float):
         "операція": "додавання",
         "перший_операнд": a,
         "другий_операнд": b,
-        "результат": a + b
+        "результат": a + b,
     }
 
 
@@ -20,7 +22,7 @@ def subtract(a: float, b: float):
         "операція": "віднімання",
         "перший_операнд": a,
         "другий_операнд": b,
-        "результат": a - b
+        "результат": a - b,
     }
 
 
@@ -30,48 +32,40 @@ def multiply(a: float, b: float):
         "операція": "множення",
         "перший_операнд": a,
         "другий_операнд": b,
-        "результат": a * b
+        "результат": a * b,
     }
 
 
 @router.get("/divide")
 def divide(a: float, b: float):
     if b == 0:
-        return {"помилка":"Ділити на нуль не можна!"}
+        return {"помилка": "Ділити на нуль не можна!"}
     return {
         "операція": "ділення",
         "перший_операнд": a,
         "другий_операнд": b,
-        "результат": a / b
+        "результат": a / b,
     }
+
 
 @router.get("/factorial")
 def factorial(a: float):
-    return {
-        "операція": "факторіал",
-        "операнд": a,
-        "результат": factorial(a)
-    }
+    return {"операція": "факторіал", "операнд": a, "результат": factorial(a)}
+
 
 @router.get("/square_root")
 def square_root(a: float):
     if a < 0:
-        return {"помилка":"Квадратний корінь з від'ємного числа!"}
-    return {
-        "операція": "квадратний корінь",
-        "операнд": a,
-        "результат": isqrt(a)
-    }
+        return {"помилка": "Квадратний корінь з від'ємного числа!"}
+    return {"операція": "квадратний корінь", "операнд": a, "результат": isqrt(a)}
+
 
 @router.get("/cube_root")
 def cube_root(a: float):
     if a < 0:
-        return {"помилка":"Кубічний корінь з від'ємного числа!"}
-    return {
-        "операція": "кубічний корінь",
-        "операнд": a,
-        "результат": cbrt(a)
-    }
+        return {"помилка": "Кубічний корінь з від'ємного числа!"}
+    return {"операція": "кубічний корінь", "операнд": a, "результат": cbrt(a)}
+
 
 @router.get("/extent")
 def extent(a: float, b: float):
@@ -79,33 +73,42 @@ def extent(a: float, b: float):
         "операція": "Зведення числа a в степені b",
         "перший_операнд": a,
         "другий_операнд": b,
-        "результат": a ** b
+        "результат": a**b,
     }
+
 
 @router.get("/log")
 def log(a: float, base: float = 10):
     if a <= 0 or base <= 0:
         return {"помилка": "Логарифм визначений тільки для додатних чисел!"}
-    return {"операція": f"логарифм числа {a} за основою {base}",
-            "результат": math.log(a, base)}
+    return {
+        "операція": f"логарифм числа {a} за основою {base}",
+        "результат": math.log(a, base),
+    }
+
 
 @router.get("/sin")
 def sin(a: float):
     return {"операція": "синус", "результат": math.sin(a)}
 
+
 @router.get("/cos")
 def cos(a: float):
     return {"операція": "косинус", "результат": math.cos(a)}
+
 
 @router.get("/tan")
 def tan(a: float):
     return {"операція": "тангенс", "результат": math.tan(a)}
 
+
 @router.get("/const")
 def const():
-    return {"Повернення числа π": pi,
-            "Повернення числа e": e,
-            "Золотий_перетин_φ": (1 + 5 ** 0.5)/2}
+    return {
+        "Повернення числа π": pi,
+        "Повернення числа e": e,
+        "Золотий_перетин_φ": (1 + 5**0.5) / 2,
+    }
 
 
 from math import pow
@@ -123,5 +126,5 @@ def root_n(a: float, n: float):
         "операція": f"{n}-й корінь",
         "операнд": a,
         "ступінь": n,
-        "результат": result
+        "результат": result,
     }

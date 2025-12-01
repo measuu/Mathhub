@@ -1,8 +1,10 @@
 from pydantic import BaseModel, Field
 
+
 class UserCreate(BaseModel):
     username: str
     password: str
+
 
 class UserOut(BaseModel):
     id: int
@@ -10,6 +12,7 @@ class UserOut(BaseModel):
 
     class Config:
         orm_mode = True
+
 
 class Token(BaseModel):
     access_token: str
@@ -20,6 +23,7 @@ class FeedbackCreate(BaseModel):
     username: str
     comment: str
     rating: float = Field(..., ge=1, le=5, description="Оцінка від 1 до 5")
+
 
 class FeedbackOut(BaseModel):
     username: str
